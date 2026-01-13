@@ -3,414 +3,374 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Interactive Portfolio Dashboard</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+    <link rel="stylesheet" href="dash_board.css">
+    <!-- Optimized Font Awesome loading -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" media="print" onload="this.media='all'">
+    <noscript>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    </noscript>
+    <!-- Google Fonts with display swap -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    </noscript>
+    <!-- Meta tags for SEO -->
+    <meta name="description" content="An interactive dashboard showcasing web development skills and tools">
+    <meta name="keywords" content="dashboard, portfolio, web development, interactive">
+    <meta name="author" content="Your Name">
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <!-- Preload critical assets -->
+    <link rel="preload" href="dash_board.css" as="style">
+    <link rel="preload" href="dash_board.js" as="script">
+    <!-- JavaScript -->
+    <script src="dash_board.js" defer></script>
+    <!-- Browser compatibility -->
+    <script>
+        // Add polyfills for older browsers
+        if (!('IntersectionObserver' in window)) {
+            const script = document.createElement('script');
+            script.src = 'https://polyfill.io/v3/polyfill.min.js?features=IntersectionObserver';
+            document.head.appendChild(script);
         }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            color: #333;
-            overflow-x: hidden;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 40px;
-            animation: fadeInDown 1s ease-out;
-        }
-
-        h1 {
-            font-size: 3rem;
-            color: white;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-            margin-bottom: 10px;
-        }
-
-        .subtitle {
-            font-size: 1.2rem;
-            color: rgba(255,255,255,0.9);
-            font-weight: 300;
-        }
-
-        .nav-tabs {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 30px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 50px;
-            padding: 10px;
-            backdrop-filter: blur(10px);
-        }
-
-        .tab-btn {
-            background: none;
-            border: none;
-            padding: 15px 30px;
-            color: white;
-            cursor: pointer;
-            border-radius: 25px;
-            transition: all 0.3s ease;
-            font-size: 1rem;
-            font-weight: 500;
-        }
-
-        .tab-btn:hover, .tab-btn.active {
-            background: rgba(255,255,255,0.2);
-            transform: translateY(-2px);
-        }
-
-        .tab-content {
-            display: none;
-            animation: fadeIn 0.5s ease-in;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
-            margin-bottom: 30px;
-        }
-
-        .card {
-            background: rgba(255,255,255,0.95);
-            border-radius: 20px;
-            padding: 25px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-        }
-
-        .card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
-        }
-
-        .card h3 {
-            color: #5a67d8;
-            margin-bottom: 15px;
-            font-size: 1.5rem;
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 10px;
-            background: #e2e8f0;
-            border-radius: 5px;
-            overflow: hidden;
-            margin: 10px 0;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #667eea, #764ba2);
-            border-radius: 5px;
-            transition: width 2s ease-in-out;
-        }
-
-        .skill-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .calculator {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        .calc-btn {
-            padding: 20px;
-            font-size: 1.2rem;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            background: #f7fafc;
-            color: #2d3748;
-        }
-
-        .calc-btn:hover {
-            background: #e2e8f0;
-            transform: scale(1.05);
-        }
-
-        .calc-btn.operator {
-            background: #667eea;
-            color: white;
-        }
-
-        .calc-btn.equals {
-            background: #48bb78;
-            color: white;
-        }
-
-        #calc-display {
-            grid-column: span 4;
-            padding: 20px;
-            font-size: 2rem;
-            text-align: right;
-            background: #2d3748;
-            color: white;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            min-height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-        }
-
-        .todo-input {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid #e2e8f0;
-            border-radius: 10px;
-            font-size: 1rem;
-            margin-bottom: 15px;
-            transition: border-color 0.3s ease;
-        }
-
-        .todo-input:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
-        .todo-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 15px;
-            background: #f7fafc;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            transition: all 0.3s ease;
-        }
-
-        .todo-item:hover {
-            background: #e2e8f0;
-        }
-
-        .todo-item.completed {
-            opacity: 0.6;
-            text-decoration: line-through;
-        }
-
-        .todo-actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        .btn {
-            padding: 8px 16px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: all 0.2s ease;
-        }
-
-        .btn-primary {
-            background: #667eea;
-            color: white;
-        }
-
-        .btn-danger {
-            background: #f56565;
-            color: white;
-        }
-
-        .btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-        }
-
-        .weather-display {
-            text-align: center;
-            padding: 20px;
-        }
-
-        .weather-temp {
-            font-size: 3rem;
-            font-weight: bold;
-            color: #667eea;
-            margin: 10px 0;
-        }
-
-        .weather-desc {
-            font-size: 1.2rem;
-            color: #666;
-            margin-bottom: 20px;
-        }
-
-        .weather-details {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            text-align: left;
-        }
-
-        .game-board {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 5px;
-            max-width: 300px;
-            margin: 20px auto;
-        }
-
-        .game-cell {
-            aspect-ratio: 1;
-            border: 2px solid #e2e8f0;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            background: white;
-        }
-
-        .game-cell:hover {
-            background: #f7fafc;
-            transform: scale(1.05);
-        }
-
-        .game-status {
-            text-align: center;
-            font-size: 1.2rem;
-            font-weight: bold;
-            margin: 20px 0;
-            color: #667eea;
-        }
-
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 10px;
-            }
-            
-            h1 {
-                font-size: 2rem;
-            }
-            
-            .nav-tabs {
-                flex-wrap: wrap;
-            }
-            
-            .tab-btn {
-                padding: 10px 20px;
-                font-size: 0.9rem;
-            }
-            
-            .dashboard-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+    </script>
 </head>
 <body>
+    <div class="floating-particles" id="particles"></div>
+    <div class="notification" id="notification"></div>
+    
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loading-screen">
+        <div class="loader"></div>
+        <p>Loading Dashboard...</p>
+    </div>
+
+    <!-- Quick Access Menu -->
+    <div class="quick-access">
+        <button class="quick-btn" onclick="scrollToTop()" aria-label="Scroll to top">
+            <i class="fas fa-arrow-up"></i>
+        </button>
+        <button class="quick-btn" onclick="toggleFullscreen()" aria-label="Toggle fullscreen">
+            <i class="fas fa-expand"></i>
+        </button>
+        <button class="quick-btn" onclick="toggleSidebar()" aria-label="Toggle sidebar">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <img src="profile.jpg" alt="Profile" class="profile-img">
+            <h3>Welcome Back!</h3>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="#dashboard" class="sidebar-link active">
+                <i class="fas fa-home"></i> Home
+            </a>
+            <a href="#profile" class="sidebar-link">
+                <i class="fas fa-user"></i> Profile
+            </a>
+            <a href="#projects" class="sidebar-link">
+                <i class="fas fa-project-diagram"></i> Projects
+            </a>
+            <a href="#skills" class="sidebar-link">
+                <i class="fas fa-code"></i> Skills
+            </a>
+            <a href="#contact" class="sidebar-link">
+                <i class="fas fa-envelope"></i> Contact
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            <button class="theme-toggle" onclick="toggleTheme()">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </div>
+    
     <div class="container">
         <header>
             <h1>Interactive Dashboard</h1>
-            <p class="subtitle">Your personal productivity hub</p>
+            <p class="subtitle">Your Enhanced Productivity Hub</p>
+            <!-- Search Bar -->
+            <div class="search-container">
+                <input type="text" id="search-input" placeholder="Search dashboard...">
+                <button class="search-btn">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
         </header>
 
+        <div class="container1">
+            <p class="para1">An interactive dashboard is a data visualization tool that presents key performance indicators (KPIs), metrics, and insights in a dynamic, user-friendly interface. It allows users to explore data through interactive elements like filters, drill-downs, charts, and graphs, enabling real-time analysis and decision-making. Built using tools like Tableau, Power BI, or custom frameworks, interactive dashboards consolidate data from multiple sources, offering customizable views tailored to specific needs. They enhance data accessibility, support trend identification, and improve operational efficiency across industries like business, healthcare, and finance.</p>
+        </div>
+
+        <!-- Quick Stats Overview -->
+        <div class="quick-stats">
+            <div class="stat-card">
+                <i class="fas fa-code"></i>
+                <div class="stat-info">
+                    <h4>Total Projects</h4>
+                    <p>47</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-users"></i>
+                <div class="stat-info">
+                    <h4>Happy Clients</h4>
+                    <p>32</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-star"></i>
+                <div class="stat-info">
+                    <h4>GitHub Stars</h4>
+                    <p>289</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-clock"></i>
+                <div class="stat-info">
+                    <h4>Hours Coded</h4>
+                    <p>1,234</p>
+                </div>
+            </div>
+        </div>
+
         <nav class="nav-tabs">
-            <button class="tab-btn active" data-tab="dashboard">Dashboard</button>
-            <button class="tab-btn" data-tab="calculator">Calculator</button>
-            <button class="tab-btn" data-tab="todo">Todo List</button>
-            <button class="tab-btn" data-tab="weather">Weather</button>
-            <button class="tab-btn" data-tab="game">Tic Tac Toe</button>
+            <button class="tab-btn active" data-target="dashboard">
+                <i class="fas fa-chart-line"></i> Dashboard
+            </button>
+            <button class="tab-btn" data-target="calculator">
+                <i class="fas fa-calculator"></i> Calculator
+            </button>
+            <button class="tab-btn" data-target="todo">
+                <i class="fas fa-tasks"></i> Todo List
+            </button>
+            <button class="tab-btn" data-target="weather">
+                <i class="fas fa-cloud-sun"></i> Weather
+            </button>
+            <button class="tab-btn" data-target="game">
+                <i class="fas fa-gamepad"></i> Tic Tac Toe
+            </button>
+            <button class="tab-btn" data-target="notes">
+                <i class="fas fa-sticky-note"></i> Notes
+            </button>
+            <button class="tab-btn" data-target="settings">
+                <i class="fas fa-cog"></i> Settings
+            </button>
+            <button class="tab-btn" data-target="projects">
+                <i class="fas fa-project-diagram"></i> Projects
+            </button>
+            <button class="tab-btn" data-target="calendar">
+                <i class="fas fa-calendar"></i> Calendar
+            </button>
+            <button class="tab-btn" data-target="pomodoro">
+                <i class="fas fa-clock"></i> Pomodoro
+            </button>
         </nav>
 
         <div id="dashboard" class="tab-content active">
             <div class="dashboard-grid">
                 <div class="card">
-                    <h3>Skills Overview</h3>
+                    <h3><i class="fas fa-code"></i> Skills Overview</h3>
                     <div class="skill-item">
-                        <span>JavaScript</span>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 90%"></div>
+                        <span class="skill-name">JavaScript</span>
+                        <div style="display: flex; align-items: center; flex: 1; margin-left: 20px;">
+                            <div class="progress-bar" style="flex: 1;">
+                                <div class="progress-fill" style="width: 92%"></div>
+                            </div>
+                            <span class="skill-percentage">92%</span>
                         </div>
                     </div>
                     <div class="skill-item">
-                        <span>CSS</span>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 85%"></div>
+                        <span class="skill-name">CSS</span>
+                        <div style="display: flex; align-items: center; flex: 1; margin-left: 20px;">
+                            <div class="progress-bar" style="flex: 1;">
+                                <div class="progress-fill" style="width: 88%"></div>
+                            </div>
+                            <span class="skill-percentage">88%</span>
                         </div>
                     </div>
                     <div class="skill-item">
-                        <span>HTML</span>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 95%"></div>
+                        <span class="skill-name">HTML</span>
+                        <div style="display: flex; align-items: center; flex: 1; margin-left: 20px;">
+                            <div class="progress-bar" style="flex: 1;">
+                                <div class="progress-fill" style="width: 96%"></div>
+                            </div>
+                            <span class="skill-percentage">96%</span>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <span class="skill-name">React</span>
+                        <div style="display: flex; align-items: center; flex: 1; margin-left: 20px;">
+                            <div class="progress-bar" style="flex: 1;">
+                                <div class="progress-fill" style="width: 84%"></div>
+                            </div>
+                            <span class="skill-percentage">84%</span>
                         </div>
                     </div>
                 </div>
 
                 <div class="card">
-                    <h3>Quick Stats</h3>
-                    <p><strong>Projects Completed:</strong> <span id="project-count">42</span></p>
-                    <p><strong>Lines of Code:</strong> <span id="code-lines">15,847</span></p>
-                    <p><strong>Coffee Consumed:</strong> <span id="coffee-count">∞</span></p>
-                    <p><strong>Bugs Fixed:</strong> <span id="bug-count">127</span></p>
+                    <h3><i class="fas fa-chart-bar"></i> Quick Stats</h3>
+                    <div class="stats-item">
+                        <span><i class="fas fa-project-diagram"></i> Projects Completed</span>
+                        <span class="stats-value" id="project-count">47</span>
+                    </div>
+                    <div class="stats-item">
+                        <span><i class="fas fa-code"></i> Lines of Code</span>
+                        <span class="stats-value" id="code-lines">18,254</span>
+                    </div>
+                    <div class="stats-item">
+                        <span><i class="fas fa-coffee"></i> Coffee Consumed</span>
+                        <span class="stats-value" id="coffee-count">∞</span>
+                    </div>
+                    <div class="stats-item">
+                        <span><i class="fas fa-bug"></i> Bugs Fixed</span>
+                        <span class="stats-value" id="bug-count">143</span>
+                    </div>
+                    <div class="stats-item">
+                        <span><i class="fab fa-github"></i> GitHub Stars</span>
+                        <span class="stats-value" id="github-stars">289</span>
+                    </div>
                 </div>
 
                 <div class="card">
-                    <h3>Recent Activity</h3>
-                    <p>✅ Completed responsive design project</p>
-                    <p>🚀 Deployed new web application</p>
-                    <p>📚 Learned new JavaScript framework</p>
-                    <p>🎯 Optimized website performance</p>
+                    <h3><i class="fas fa-history"></i> Recent Activity</h3>
+                    <div class="activity-item">
+                        <i class="fas fa-check-circle"></i> Completed responsive design project
+                    </div>
+                    <div class="activity-item">
+                        <i class="fas fa-rocket"></i> Deployed new web application
+                    </div>
+                    <div class="activity-item">
+                        <i class="fas fa-book"></i> Learned new JavaScript framework
+                    </div>
+                    <div class="activity-item">
+                        <i class="fas fa-bullseye"></i> Optimized website performance
+                    </div>
+                    <div class="activity-item">
+                        <i class="fas fa-wrench"></i> Fixed critical production bug
+                    </div>
+                    <div class="activity-item">
+                        <i class="fas fa-chart-pie"></i> Created analytics dashboard
+                    </div>
+                    <div class="activity-item">
+                        <i class="fas fa-star"></i> Added new features to portfolio
+                    </div>
                 </div>
 
                 <div class="card">
-                    <h3>Current Time</h3>
-                    <div id="current-time"></div>
+                    <h3><i class="fas fa-clock"></i> Current Time</h3>
+                    <div class="clock-display">
+                        <div class="clock-time" id="current-time"></div>
+                        <div class="clock-date" id="current-date"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="stopwatch-container">
+        <h1>Stopwatch</h1>
+        <div id="display">00:00:00</div>
+        <div class="buttons">
+            <button id="start">Start</button>
+            <button id="stop">Stop</button>
+            <button id="reset">Reset</button>
+        </div>
+    </div>
+
+     <div class="stopwatch-container">
+        <h1>Stopwatch</h1>
+        <div id="display">00:00:00</div>
+        <div class="buttons">
+            <button id="start">Start</button>
+            <button id="stop">Stop</button>
+            <button id="reset">Reset</button>
+        </div>
+        <div class="total-time-box">
+            <h2>Total Time</h2>
+            <div id="total-time">00:00:00</div>
+        </div>
+    </div>
+
+        <div id="projects" class="tab-content">
+            <div class="card">
+                <h3><i class="fas fa-project-diagram"></i> Featured Projects</h3>
+                <div class="projects-grid">
+                    <div class="project-card">
+                        <div class="project-image">
+                            <img src="project1.jpg" alt="Project 1">
+                        </div>
+                        <div class="project-info">
+                            <h4>E-commerce Platform</h4>
+                            <p>A full-stack e-commerce solution with React and Node.js</p>
+                            <div class="project-tags">
+                                <span>React</span>
+                                <span>Node.js</span>
+                                <span>MongoDB</span>
+                            </div>
+                            <div class="project-links">
+                                <a href="#" class="btn btn-primary">
+                                    <i class="fas fa-eye"></i> View Demo
+                                </a>
+                                <a href="#" class="btn">
+                                    <i class="fab fa-github"></i> Source Code
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- More project cards... -->
+                </div>
+            </div>
+        </div>
+
+        <div id="calendar" class="tab-content">
+            <div class="card">
+                <h3><i class="fas fa-calendar"></i> Event Calendar</h3>
+                <div class="calendar-header">
+                    <button class="btn" onclick="previousMonth()">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <h4 id="current-month">September 2023</h4>
+                    <button class="btn" onclick="nextMonth()">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+                <div class="calendar-grid">
+                    <div class="calendar-weekdays">
+                        <div>Sun</div>
+                        <div>Mon</div>
+                        <div>Tue</div>
+                        <div>Wed</div>
+                        <div>Thu</div>
+                        <div>Fri</div>
+                        <div>Sat</div>
+                    </div>
+                    <div class="calendar-days" id="calendar-days">
+                        <!-- Calendar days will be populated by JavaScript -->
+                    </div>
+                </div>
+                <div class="calendar-events">
+                    <h4>Upcoming Events</h4>
+                    <div class="event-list" id="event-list">
+                        <!-- Events will be populated by JavaScript -->
+                    </div>
                 </div>
             </div>
         </div>
 
         <div id="calculator" class="tab-content">
             <div class="card">
-                <h3>Calculator</h3>
+                <h3><i class="fas fa-calculator"></i> Enhanced Calculator</h3>
                 <div id="calc-display">0</div>
                 <div class="calculator">
-                    <button class="calc-btn" onclick="clearCalc()">C</button>
-                    <button class="calc-btn" onclick="deleteLast()">⌫</button>
+                    <button class="calc-btn" onclick="clearCalc()" aria-label="Clear calculator">C</button>
+                    <button class="calc-btn" onclick="deleteLast()" aria-label="Delete last character">⌫</button>
                     <button class="calc-btn operator" onclick="appendToCalc('/')">/</button>
                     <button class="calc-btn operator" onclick="appendToCalc('*')">×</button>
                     <button class="calc-btn" onclick="appendToCalc('7')">7</button>
@@ -424,8 +384,8 @@
                     <button class="calc-btn" onclick="appendToCalc('1')">1</button>
                     <button class="calc-btn" onclick="appendToCalc('2')">2</button>
                     <button class="calc-btn" onclick="appendToCalc('3')">3</button>
-                    <button class="calc-btn equals" onclick="calculateResult()" rowspan="2">=</button>
-                    <button class="calc-btn" onclick="appendToCalc('0')" colspan="2">0</button>
+                    <button class="calc-btn equals" onclick="calculateResult()" style="grid-row: span 2;">=</button>
+                    <button class="calc-btn" onclick="appendToCalc('0')" style="grid-column: span 2;">0</button>
                     <button class="calc-btn" onclick="appendToCalc('.')">.</button>
                 </div>
             </div>
@@ -433,24 +393,46 @@
 
         <div id="todo" class="tab-content">
             <div class="card">
-                <h3>Todo List</h3>
+                <h3><i class="fas fa-tasks"></i> Smart Todo List</h3>
                 <input type="text" id="todo-input" class="todo-input" placeholder="Add a new task..." onkeypress="handleTodoKeyPress(event)">
-                <button class="btn btn-primary" onclick="addTodo()">Add Task</button>
+                <button class="btn btn-primary" onclick="addTodo()" aria-label="Add new task">
+                    <i class="fas fa-plus"></i> Add Task
+                </button>
+                <div style="margin: 20px 0; display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button class="btn btn-primary" onclick="filterTodos('all')" id="filter-all">
+                        <i class="fas fa-list"></i> All
+                    </button>
+                    <button class="btn" onclick="filterTodos('active')" id="filter-active" style="background: #e2e8f0; color: #333;">
+                        <i class="fas fa-clock"></i> Active
+                    </button>
+                    <button class="btn" onclick="filterTodos('completed')" id="filter-completed" style="background: #e2e8f0; color: #333;">
+                        <i class="fas fa-check-circle"></i> Completed
+                    </button>
+                </div>
                 <div id="todo-list"></div>
+                <div id="todo-stats" style="margin-top: 20px; text-align: center; color: #666; font-size: 0.9rem;"></div>
             </div>
         </div>
 
         <div id="weather" class="tab-content">
             <div class="card">
-                <h3>Weather Information</h3>
+                <h3><i class="fas fa-cloud-sun"></i> Weather Information</h3>
                 <div class="weather-display">
-                    <div class="weather-temp">22°C</div>
-                    <div class="weather-desc">Partly Cloudy</div>
+                    <div class="weather-temp">24°C</div>
+                    <div class="weather-desc">Sunny with Light Clouds</div>
                     <div class="weather-details">
-                        <div><strong>Humidity:</strong> 65%</div>
-                        <div><strong>Wind:</strong> 12 km/h</div>
-                        <div><strong>Pressure:</strong> 1013 hPa</div>
-                        <div><strong>UV Index:</strong> 5</div>
+                        <div class="weather-detail-item">
+                            <i class="fas fa-tint"></i> <strong>Humidity:</strong> 58%
+                        </div>
+                        <div class="weather-detail-item">
+                            <i class="fas fa-wind"></i> <strong>Wind:</strong> 8 km/h
+                        </div>
+                        <div class="weather-detail-item">
+                            <i class="fas fa-compress-arrows-alt"></i> <strong>Pressure:</strong> 1018 hPa
+                        </div>
+                        <div class="weather-detail-item">
+                            <i class="fas fa-sun"></i> <strong>UV Index:</strong> 5
+                        </div>
                     </div>
                 </div>
             </div>
@@ -458,234 +440,165 @@
 
         <div id="game" class="tab-content">
             <div class="card">
-                <h3>Tic Tac Toe</h3>
+                <h3><i class="fas fa-gamepad"></i> Tic Tac Toe</h3>
                 <div class="game-status" id="game-status">Player X's turn</div>
                 <div class="game-board" id="game-board"></div>
-                <button class="btn btn-primary" onclick="resetGame()" style="margin-top: 20px;">Reset Game</button>
+                <button class="btn btn-primary" onclick="resetGame()" aria-label="Reset game" style="margin-top: 20px;">
+                    <i class="fas fa-redo"></i> Reset Game
+                </button>
+            </div>
+        </div>
+
+        <div id="notes" class="tab-content">
+            <div class="card">
+                <h3><i class="fas fa-sticky-note"></i> Quick Notes</h3>
+                <div class="notes-container">
+                    <textarea id="notes-input" class="notes-input" placeholder="Write your notes here..."></textarea>
+                    <div class="notes-actions">
+                        <button class="btn btn-primary" onclick="saveNote()" aria-label="Save note">
+                            <i class="fas fa-save"></i> Save Note
+                        </button>
+                        <button class="btn" onclick="clearNote()" aria-label="Clear note" style="background: #e2e8f0; color: #333;">
+                            <i class="fas fa-trash"></i> Clear
+                        </button>
+                    </div>
+                    <div id="saved-notes" class="saved-notes"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="settings" class="tab-content">
+            <div class="card">
+                <h3><i class="fas fa-cog"></i> Settings</h3>
+                <div class="settings-container">
+                    <div class="setting-item">
+                        <label>
+                            <input type="checkbox" id="dark-mode-toggle" onchange="toggleDarkMode()">
+                            Dark Mode
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <label>
+                            <input type="checkbox" id="notifications-toggle" checked onchange="toggleNotifications()">
+                            Enable Notifications
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <label>Theme Color:</label>
+                        <select id="theme-selector" onchange="changeTheme()">
+                            <option value="default">Default</option>
+                            <option value="blue">Blue</option>
+                            <option value="green">Green</option>
+                            <option value="purple">Purple</option>
+                        </select>
+                    </div>
+                    <div class="setting-item">
+                        <label>Font Size:</label>
+                        <input type="range" id="font-size-slider" min="12" max="20" value="16" onchange="changeFontSize()">
+                        <span id="font-size-value">16px</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- New Pomodoro Timer Section -->
+        <div id="pomodoro" class="tab-content">
+            <div class="card">
+                <h3><i class="fas fa-clock"></i> Pomodoro Timer</h3>
+                <div class="pomodoro-container">
+                    <div class="timer-display">
+                        <span id="minutes">25</span>:<span id="seconds">00</span>
+                    </div>
+                    <div class="timer-controls">
+                        <button class="btn btn-primary" id="start-timer" onclick="startPomodoro()">
+                            <i class="fas fa-play"></i> Start
+                        </button>
+                        <button class="btn" id="pause-timer" onclick="pausePomodoro()" style="display: none;">
+                            <i class="fas fa-pause"></i> Pause
+                        </button>
+                        <button class="btn" id="reset-timer" onclick="resetPomodoro()">
+                            <i class="fas fa-redo"></i> Reset
+                        </button>
+                    </div>
+                    <div class="timer-modes">
+                        <button class="btn" onclick="setTimerMode('pomodoro')" id="pomodoro-mode">Pomodoro</button>
+                        <button class="btn" onclick="setTimerMode('short-break')" id="short-break-mode">Short Break</button>
+                        <button class="btn" onclick="setTimerMode('long-break')" id="long-break-mode">Long Break</button>
+                    </div>
+                    <div class="pomodoro-stats">
+                        <div class="stat">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Completed Pomodoros: </span>
+                            <span id="completed-pomodoros">0</span>
+                        </div>
+                        <div class="stat">
+                            <i class="fas fa-clock"></i>
+                            <span>Total Focus Time: </span>
+                            <span id="total-focus-time">0h</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <script>
-        // Tab functionality
-        document.querySelectorAll('.tab-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const tabId = btn.dataset.tab;
-                
-                // Remove active class from all tabs and buttons
-                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-                
-                // Add active class to clicked button and corresponding tab
-                btn.classList.add('active');
-                document.getElementById(tabId).classList.add('active');
-            });
-        });
+    <!-- Footer -->
+    <footer class="dashboard-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>About</h4>
+                <p>This interactive dashboard was created to showcase web development skills and provide useful tools for productivity.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#dashboard">Dashboard</a></li>
+                    <li><a href="#projects">Projects</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Connect</h4>
+                <div class="social-links">
+                    <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2023 Interactive Dashboard. All rights reserved.</p>
+        </div>
+    </footer>
 
-        // Clock functionality
-        function updateTime() {
-            const now = new Date();
-            const timeString = now.toLocaleTimeString();
-            const dateString = now.toLocaleDateString();
-            document.getElementById('current-time').innerHTML = `
-                <div style="font-size: 2rem; font-weight: bold; color: #667eea;">${timeString}</div>
-                <div style="color: #666; margin-top: 10px;">${dateString}</div>
-            `;
-        }
-        setInterval(updateTime, 1000);
-        updateTime();
+    <!-- Modal Templates -->
+<div class="modal" id="event-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" style="display:none;">
+    <div class="modal-content">
+        <h3 id="modal-title">Add Event</h3>
+        <form id="event-form" onsubmit="addEvent(event)">
+            <div class="form-group">
+                <label for="event-title">Event Title</label>
+                <input type="text" id="event-title" required aria-required="true" />
+            </div>
+            <div class="form-group">
+                <label for="event-date">Date</label>
+                <input type="date" id="event-date" required aria-required="true" onchange="updateCountdown()" />
+            </div>
+            <div class="form-group">
+                <label for="event-time">Time</label>
+                <input type="time" id="event-time" required aria-required="true" oninput="updateCountdown()" />
+                <small id="countdown-display" style="color: green; display:none;"></small>
+            </div>
+            <div class="form-group">
+                <label for="event-description">Description</label>
+                <textarea id="event-description" rows="3" placeholder="Optional"></textarea>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary" aria-label="Save event">Save Event</button>
+                <button type="button" class="btn" onclick="closeModal()" aria-label="Cancel">Cancel</button>
+            </div>
+        </form>
+    </div>
+    <h1>contributed by chirag</h1>
+</div>
 
-        // Calculator functionality
-        let calcDisplay = document.getElementById('calc-display');
-        let currentInput = '0';
-        let shouldResetDisplay = false;
-
-        function appendToCalc(value) {
-            if (shouldResetDisplay) {
-                currentInput = '';
-                shouldResetDisplay = false;
-            }
-            
-            if (currentInput === '0' && value !== '.') {
-                currentInput = value;
-            } else {
-                currentInput += value;
-            }
-            
-            calcDisplay.textContent = currentInput;
-        }
-
-        function clearCalc() {
-            currentInput = '0';
-            calcDisplay.textContent = currentInput;
-        }
-
-        function deleteLast() {
-            if (currentInput.length > 1) {
-                currentInput = currentInput.slice(0, -1);
-            } else {
-                currentInput = '0';
-            }
-            calcDisplay.textContent = currentInput;
-        }
-
-        function calculateResult() {
-            try {
-                const result = eval(currentInput.replace('×', '*'));
-                currentInput = result.toString();
-                calcDisplay.textContent = currentInput;
-                shouldResetDisplay = true;
-            } catch (error) {
-                calcDisplay.textContent = 'Error';
-                currentInput = '0';
-                shouldResetDisplay = true;
-            }
-        }
-
-        // Todo functionality
-        let todos = [];
-        let todoIdCounter = 0;
-
-        function addTodo() {
-            const input = document.getElementById('todo-input');
-            const text = input.value.trim();
-            
-            if (text) {
-                todos.push({
-                    id: todoIdCounter++,
-                    text: text,
-                    completed: false
-                });
-                input.value = '';
-                renderTodos();
-            }
-        }
-
-        function toggleTodo(id) {
-            const todo = todos.find(t => t.id === id);
-            if (todo) {
-                todo.completed = !todo.completed;
-                renderTodos();
-            }
-        }
-
-        function deleteTodo(id) {
-            todos = todos.filter(t => t.id !== id);
-            renderTodos();
-        }
-
-        function renderTodos() {
-            const todoList = document.getElementById('todo-list');
-            todoList.innerHTML = '';
-            
-            todos.forEach(todo => {
-                const todoItem = document.createElement('div');
-                todoItem.className = `todo-item ${todo.completed ? 'completed' : ''}`;
-                todoItem.innerHTML = `
-                    <span>${todo.text}</span>
-                    <div class="todo-actions">
-                        <button class="btn btn-primary" onclick="toggleTodo(${todo.id})">
-                            ${todo.completed ? 'Undo' : 'Done'}
-                        </button>
-                        <button class="btn btn-danger" onclick="deleteTodo(${todo.id})">Delete</button>
-                    </div>
-                `;
-                todoList.appendChild(todoItem);
-            });
-        }
-
-        function handleTodoKeyPress(event) {
-            if (event.key === 'Enter') {
-                addTodo();
-            }
-        }
-
-        // Tic Tac Toe functionality
-        let gameBoard = ['', '', '', '', '', '', '', '', ''];
-        let currentPlayer = 'X';
-        let gameActive = true;
-
-        function initializeGame() {
-            const board = document.getElementById('game-board');
-            board.innerHTML = '';
-            
-            for (let i = 0; i < 9; i++) {
-                const cell = document.createElement('div');
-                cell.className = 'game-cell';
-                cell.onclick = () => makeMove(i);
-                board.appendChild(cell);
-            }
-            
-            updateGameStatus();
-        }
-
-        function makeMove(index) {
-            if (gameBoard[index] === '' && gameActive) {
-                gameBoard[index] = currentPlayer;
-                updateBoard();
-                
-                if (checkWinner()) {
-                    document.getElementById('game-status').textContent = `Player ${currentPlayer} wins!`;
-                    gameActive = false;
-                } else if (gameBoard.every(cell => cell !== '')) {
-                    document.getElementById('game-status').textContent = "It's a draw!";
-                    gameActive = false;
-                } else {
-                    currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
-                    updateGameStatus();
-                }
-            }
-        }
-
-        function updateBoard() {
-            const cells = document.querySelectorAll('.game-cell');
-            cells.forEach((cell, index) => {
-                cell.textContent = gameBoard[index];
-                cell.style.color = gameBoard[index] === 'X' ? '#667eea' : '#48bb78';
-            });
-        }
-
-        function updateGameStatus() {
-            if (gameActive) {
-                document.getElementById('game-status').textContent = `Player ${currentPlayer}'s turn`;
-            }
-        }
-
-        function checkWinner() {
-            const winPatterns = [
-                [0, 1, 2], [3, 4, 5], [6, 7, 8], // rows
-                [0, 3, 6], [1, 4, 7], [2, 5, 8], // columns
-                [0, 4, 8], [2, 4, 6] // diagonals
-            ];
-            
-            return winPatterns.some(pattern => {
-                const [a, b, c] = pattern;
-                return gameBoard[a] && gameBoard[a] === gameBoard[b] && gameBoard[a] === gameBoard[c];
-            });
-        }
-
-        function resetGame() {
-            gameBoard = ['', '', '', '', '', '', '', '', ''];
-            currentPlayer = 'X';
-            gameActive = true;
-            initializeGame();
-        }
-
-        // Initialize game on load
-        initializeGame();
-
-        // Animate progress bars on load
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                document.querySelectorAll('.progress-fill').forEach(bar => {
-                    const width = bar.style.width;
-                    bar.style.width = '0%';
-                    setTimeout(() => {
-                        bar.style.width = width;
-                    }, 100);
-                });
-            }, 500);
-        });
-    </script>
-</body>
-</html>
